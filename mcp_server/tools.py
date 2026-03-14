@@ -24,6 +24,9 @@ _MOCK_COMPETITORS = {
     "job": ["LazyApply", "Teal HQ", "Simplify", "Applyish", "LoopCV"],
     "crm": ["Salesforce", "HubSpot", "Pipedrive"],
     "note": ["Notion", "Evernote", "Obsidian"],
+    "water": ["Nalgene", "Hydro Flask", "S'well", "CamelBak", "Contigo"],
+    "beverage": ["Coca-Cola", "PepsiCo", "Danone", "Nestlé", "Red Bull"],
+    "can": ["Nalgene", "Hydro Flask", "S'well", "CamelBak", "Contigo", "Gatorade"],
 }
 
 _MOCK_STARTUPS = {
@@ -130,4 +133,3 @@ __all__ = [
     "search_trends",
     "startup_lookup",
 ]
-

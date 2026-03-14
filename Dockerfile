@@ -5,12 +5,8 @@ WORKDIR /app
 # Copy requirements and install dependencies
 COPY requirements.txt .
 
-# Install with retry logic and use reliable PyPI mirror
-RUN pip install --no-cache-dir \
-    --index-url https://pypi.org/simple/ \
-    --default-timeout=1000 \
-    --retries 5 \
-    -r requirements.txt
+# Simple pip install (removed problematic options)
+RUN pip install -r requirements.txt
 
 # Copy project files
 COPY . .

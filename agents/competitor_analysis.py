@@ -56,5 +56,3 @@ def competitor_analysis_node(state: BusinessIdeaState) -> Dict[str, Any]:
 
 
 __all__ = ["competitor_analysis_node"]
-
-
