@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    container_name: ai-validator-api
+    ports:
+      - "8001:8001"
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY}
+    volumes:
+      - .:/app
+    command: python -m app.main
+    networks:
+      - ai-validator-network
+
+  ui:
+    build: .
+    container_name: ai-validator-ui
+    ports:
+      - "8501:8501"
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY}
+    volumes:
+      - .:/app
+    command: streamlit run ui/streamlit_app.py --server.port 8501 --server.address 0.0.0.0
+    depends_on:
+      - api
+    networks:
+      - ai-validator-network
+
+  mcp-server:
+    build: .
+    container_name: ai-validator-mcp
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY}
+    volumes:
+      - .:/app
+    command: python -m mcp_server.server
+    networks:
+      - ai-validator-network
+
+networks:
+  ai-validator-network:
+    driver: bridge
