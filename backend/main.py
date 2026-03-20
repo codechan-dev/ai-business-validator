@@ -3,7 +3,7 @@ FastAPI Application for AI Business Idea Validator
 """
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import StreamingResponse
 import logging
 import io
 import os
@@ -291,10 +291,10 @@ async def download_report(request: ValidateRequest):
         
         # Return file
         filename = f"business_validation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pptx"
-        return FileResponse(
-            io.BytesIO(pptx_bytes.getvalue()),
+        return StreamingResponse(
+            iter([pptx_bytes.getvalue()]),
             media_type="application/vnd.openxmlformats-officedocument.presentationml.presentation",
-            filename=filename
+            headers={"Content-Disposition": f"attachment; filename={filename}"}
         )
     
     except Exception as e:
