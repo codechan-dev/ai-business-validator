@@ -19,6 +19,9 @@ COPY frontend/tsconfig.node.json ./
 COPY frontend/tailwind.config.js ./
 COPY frontend/postcss.config.js ./
 
+# Set build environment variables for API
+ENV VITE_API_URL=/api
+
 # Build
 RUN npm run build
 
@@ -33,4 +36,5 @@ COPY --from=builder /app/dist ./dist
 
 EXPOSE 5173
 
+# Serve frontend and proxy API requests to backend
 CMD ["serve", "-s", "dist", "-l", "5173"]
