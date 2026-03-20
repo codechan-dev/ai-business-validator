@@ -27,7 +27,7 @@ export default function Dashboard({ idea, result, onReset, queryTime = 0 }: Dash
   const handleDownloadReport = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8001/download-report', {
+      const response = await fetch('/api/download-report', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,9 +45,12 @@ export default function Dashboard({ idea, result, onReset, queryTime = 0 }: Dash
         link.click();
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
+      } else {
+        throw new Error('Failed to generate report');
       }
     } catch (error) {
       console.error('Failed to download report:', error);
+      alert('Failed to generate report. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -144,9 +147,11 @@ export default function Dashboard({ idea, result, onReset, queryTime = 0 }: Dash
       </motion.nav>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 py-12 space-y-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8 sm:space-y-12">
         {/* Score Cards Section */}
         <motion.section
+          id="scores"
+          className="scroll-mt-20"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
@@ -155,7 +160,7 @@ export default function Dashboard({ idea, result, onReset, queryTime = 0 }: Dash
           {/* Glass Effect Background */}
           <div className="absolute -inset-6 bg-gradient-to-br from-cyan-500/10 to-blue-500/5 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           <div className="relative">
-            <h2 className="text-2xl font-bold mb-8 text-cyan-300">
+            <h2 className="text-xl sm:text-2xl font-bold mb-6 sm:mb-8 text-cyan-300">
               📊 Performance Metrics
             </h2>
             <ScoreCards scores={result.scores} />
@@ -164,36 +169,41 @@ export default function Dashboard({ idea, result, onReset, queryTime = 0 }: Dash
 
         {/* Charts and Signals Row */}
         <motion.section
-          className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+          id="analysis"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 scroll-mt-20"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
           {/* Charts */}
           <div className="lg:col-span-2">
-            <h2 className="text-2xl font-bold mb-8 text-cyan-300">
+            <h2 className="text-xl sm:text-2xl font-bold mb-6 sm:mb-8 text-cyan-300">
               📈 Market Analysis
             </h2>
-            <GraphSection 
-              scores={result.scores} 
-              competitors={result.competitors}
-              growthRate={result.analysis.growthRate}
-            />
+            <div className="overflow-x-auto">
+              <GraphSection 
+                scores={result.scores} 
+                competitors={result.competitors}
+                growthRate={result.analysis.growthRate}
+              />
+            </div>
           </div>
 
           {/* Global Demand Map */}
-          <div>
+          <div className="w-full">
             <GlobalDemandMap idea={idea} />
           </div>
         </motion.section>
 
         {/* Real-Time Signals Section */}
         <motion.section
+          id="signals"
+          className="scroll-mt-20"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25 }}
         >
-          <h2 className="text-2xl font-bold mb-8 text-cyan-300">
+          <h2 className="text-xl sm:text-2xl font-bold mb-6 sm:mb-8 text-cyan-300">
             📡 Real-Time Signals
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -213,11 +223,13 @@ export default function Dashboard({ idea, result, onReset, queryTime = 0 }: Dash
 
         {/* Analysis Panels */}
         <motion.section
+          id="analysis-detail"
+          className="scroll-mt-20"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <h2 className="text-2xl font-bold mb-8 text-cyan-300">
+          <h2 className="text-xl sm:text-2xl font-bold mb-6 sm:mb-8 text-cyan-300">
             🔍 Detailed Analysis
           </h2>
           <AnalysisPanels analysis={result.analysis} />
@@ -225,6 +237,7 @@ export default function Dashboard({ idea, result, onReset, queryTime = 0 }: Dash
 
         {/* Architecture & Data Flow Section */}
         <motion.section
+          className="overflow-x-auto"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35 }}
@@ -234,12 +247,13 @@ export default function Dashboard({ idea, result, onReset, queryTime = 0 }: Dash
 
         {/* Recommendation */}
         <motion.section
-          className="glass-effect p-8"
+          id="recommendation"
+          className="glass-effect p-6 sm:p-8 scroll-mt-20"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <h2 className="text-2xl font-bold mb-6 text-cyan-300">
+          <h2 className="text-xl sm:text-2xl font-bold mb-6 text-cyan-300">
             💡 AI Recommendation
           </h2>
           <Typewriter text={result.analysis.recommendation} speed={20} />
