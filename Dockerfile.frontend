@@ -1,0 +1,36 @@
+# Frontend Dockerfile
+FROM node:20-alpine as builder
+
+WORKDIR /app
+
+# Copy package files
+COPY frontend/package*.json ./
+
+# Install dependencies including optional build tools
+RUN npm install && npm install --save-dev terser
+
+# Copy source code
+COPY frontend/src ./src
+COPY frontend/public ./public
+COPY frontend/index.html ./
+COPY frontend/vite.config.ts ./
+COPY frontend/tsconfig.json ./
+COPY frontend/tsconfig.node.json ./
+COPY frontend/tailwind.config.js ./
+COPY frontend/postcss.config.js ./
+
+# Build
+RUN npm run build
+
+# Production image
+FROM node:20-alpine
+
+WORKDIR /app
+
+RUN npm install -g serve
+
+COPY --from=builder /app/dist ./dist
+
+EXPOSE 5173
+
+CMD ["serve", "-s", "dist", "-l", "5173"]
