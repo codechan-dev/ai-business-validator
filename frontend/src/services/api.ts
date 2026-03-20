@@ -9,28 +9,28 @@ const api = axios.create({
 });
 
 export async function validateIdea(idea: string): Promise<ValidationResult> {
-  const response = await api.post<ValidationResult>('/validate', { idea });
+  const response = await api.post<ValidationResult>('/api/validate', { idea });
   return response.data;
 }
 
 export async function fetchSignals(source: string, query: string): Promise<Signal[]> {
-  const response = await api.get<Signal[]>('/signals/' + source, {
+  const response = await api.get<Signal[]>('/api/signals/' + source, {
     params: { query }
   });
   return response.data || [];
 }
 
 export async function getHistory(): Promise<any[]> {
-  const response = await api.get('/history');
+  const response = await api.get('/api/history');
   return response.data;
 }
 
 export async function deleteHistoryItem(id: string): Promise<void> {
-  await api.delete(`/history/${id}`);
+  await api.delete(`/api/history/${id}`);
 }
 
 export async function exportReport(idea: string, result: any): Promise<Blob> {
-  const response = await api.post('/export', { idea, result }, {
+  const response = await api.post('/api/export', { idea, result }, {
     responseType: 'blob'
   });
   return response.data;
