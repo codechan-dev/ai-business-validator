@@ -108,7 +108,7 @@ export default function BarChartComponent({ scores, competitors = [] }: BarChart
         <div className="grid grid-cols-3 gap-4 text-xs">
           <div className="bg-white/5 p-3 rounded border border-cyan-500/30">
             <p className="text-gray-400">Your Strength</p>
-            <p className="text-green-400 text-lg font-bold mt-1">{Math.round(scores.feasibility * 100)}%</p>
+            <p className="text-green-400 text-lg font-bold mt-1">{Math.round(scores.feasibility)}%</p>
           </div>
           <div className="bg-white/5 p-3 rounded border border-orange-500/30">
             <p className="text-gray-400">Growth Potential</p>

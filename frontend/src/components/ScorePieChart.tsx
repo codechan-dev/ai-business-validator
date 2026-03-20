@@ -101,25 +101,25 @@ export default function ScorePieChart({ scores }: ScorePieChartProps) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
         <div className="text-center">
           <div className="text-lg font-bold gradient-text">
-            {Math.round(scores.feasibility * 100)}%
+            {Math.round(scores.feasibility)}%
           </div>
           <div className="text-xs text-gray-400 mt-1">Feasibility</div>
         </div>
         <div className="text-center">
           <div className="text-lg font-bold text-green-400">
-            {Math.round(scores.demand * 100)}%
+            {Math.round(scores.demand)}%
           </div>
           <div className="text-xs text-gray-400 mt-1">Demand</div>
         </div>
         <div className="text-center">
           <div className="text-lg font-bold text-orange-400">
-            {Math.round(scores.competition * 100)}%
+            {Math.round(scores.competition)}%
           </div>
           <div className="text-xs text-gray-400 mt-1">Competition</div>
         </div>
         <div className="text-center">
           <div className="text-lg font-bold text-red-400">
-            {Math.round(scores.risk * 100)}%
+            {Math.round(scores.risk)}%
           </div>
           <div className="text-xs text-gray-400 mt-1">Risk</div>
         </div>
