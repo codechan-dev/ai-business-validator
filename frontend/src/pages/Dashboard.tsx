@@ -151,11 +151,10 @@ export default function Dashboard({ idea, result, onReset, queryTime = 0 }: Dash
         {/* Score Cards Section */}
         <motion.section
           id="scores"
-          className="scroll-mt-20"
+          className="scroll-mt-20 relative group"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="relative group"
         >
           {/* Glass Effect Background */}
           <div className="absolute -inset-6 bg-gradient-to-br from-cyan-500/10 to-blue-500/5 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>

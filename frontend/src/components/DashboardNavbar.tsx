@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ChevronLeft, Download, RotateCcw, Menu, X } from 'lucide-react';
+import { ChevronLeft, Download, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
 interface NavItem {
@@ -10,7 +10,6 @@ interface NavItem {
 
 interface DashboardNavbarProps {
   idea: string;
-  queryTime?: number;
   onReset: () => void;
   onExport: () => void;
   isLoading?: boolean;
@@ -25,7 +24,6 @@ const navItems: NavItem[] = [
 
 export default function DashboardNavbar({
   idea,
-  queryTime = 0,
   onReset,
   onExport,
   isLoading = false,
