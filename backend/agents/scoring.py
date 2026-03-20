@@ -8,18 +8,18 @@ def scoring(market_data: dict, competitor_data: dict, demand_data: dict, risk_da
     risk_score = 100 - risk_data.get('risk_score', 50)  # Invert so lower risk = higher score
     
     return {
-        "feasibility": min(max(feasibility_score, 0), 100),
-        "demand": min(max(demand_score, 0), 100),
-        "competition": min(max(competition_score, 0), 100),
-        "risk": min(max(100 - risk_score, 0), 100),  # Higher is riskier
+        "feasibility": int(min(max(feasibility_score, 0), 100)),
+        "demand": int(min(max(demand_score, 0), 100)),
+        "competition": int(min(max(competition_score, 0), 100)),
+        "risk": int(min(max(100 - risk_score, 0), 100)),  # Higher is riskier
     }
 
-def calculate_feasibility(market_data: dict, competitor_data: dict) -> int:
+def calculate_feasibility(market_data: dict, competitor_data: dict) -> float:
     """
     Calculate feasibility score
     Based on market size, growth rate, and competitive landscape
     """
-    base_score = 50
+    base_score = 50.0
     
     # Market factors (+0 to +20)
     if "market_size" in market_data:
@@ -35,11 +35,11 @@ def calculate_feasibility(market_data: dict, competitor_data: dict) -> int:
     
     return min(base_score, 100)
 
-def calculate_demand(demand_data: dict) -> int:
+def calculate_demand(demand_data: dict) -> float:
     """
     Calculate market demand score
     """
-    base_score = 50
+    base_score = 50.0
     
     demand_level = demand_data.get('demand_level', '')
     demand_mapping = {
@@ -55,11 +55,11 @@ def calculate_demand(demand_data: dict) -> int:
     
     return min(base_score, 100)
 
-def calculate_competition(competitor_data: dict) -> int:
+def calculate_competition(competitor_data: dict) -> float:
     """
     Calculate competition score (higher = more competitive)
     """
-    base_score = 40
+    base_score = 40.0
     
     competitors = competitor_data.get('competitors', [])
     avg_strength = sum(c.get('strength', 0) for c in competitors) / max(len(competitors), 1)
