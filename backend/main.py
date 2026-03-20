@@ -289,22 +289,15 @@ from fastapi.staticfiles import StaticFiles
 import pathlib
 
 # Get the path to frontend dist folder
+# For production deployment with frontend built in Docker
 frontend_dist = pathlib.Path(__file__).parent.parent / "frontend" / "dist"
 
 # Mount static files if dist folder exists
 if frontend_dist.exists():
     app.mount("/", StaticFiles(directory=str(frontend_dist), html=True), name="static")
+    logger.info(f"Serving static frontend files from {frontend_dist}")
 else:
-    logger.warning(f"Frontend dist folder not found at {frontend_dist}. Please build frontend first.")
-
-# Catch-all route to serve index.html for SPA routing
-@app.get("/{full_path:path}")
-async def serve_spa(full_path: str):
-    """Serve single page application - fallback to index.html"""
-    index_file = frontend_dist / "index.html"
-    if index_file.exists():
-        return FileResponse(index_file)
-    return {"detail": "Not Found"}
+    logger.warning(f"Frontend dist folder not found at {frontend_dist}. Frontend will not be served.")
 
 if __name__ == "__main__":
     import uvicorn
