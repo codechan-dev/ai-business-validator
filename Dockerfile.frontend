@@ -9,9 +9,8 @@ COPY frontend/package*.json ./
 # Install dependencies including optional build tools
 RUN npm install && npm install --save-dev terser
 
-# Copy source code
+# Copy source code and config
 COPY frontend/src ./src
-COPY frontend/public ./public
 COPY frontend/index.html ./
 COPY frontend/vite.config.ts ./
 COPY frontend/tsconfig.json ./
@@ -19,10 +18,8 @@ COPY frontend/tsconfig.node.json ./
 COPY frontend/tailwind.config.js ./
 COPY frontend/postcss.config.js ./
 
-# Set build environment variables for API
-ENV VITE_API_URL=/api
-
 # Build
+ENV VITE_API_URL=/api
 RUN npm run build
 
 # Production image
@@ -36,5 +33,5 @@ COPY --from=builder /app/dist ./dist
 
 EXPOSE 5173
 
-# Serve frontend and proxy API requests to backend
+# Serve frontend
 CMD ["serve", "-s", "dist", "-l", "5173"]

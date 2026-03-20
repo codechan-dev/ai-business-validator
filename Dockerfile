@@ -10,9 +10,8 @@ COPY frontend/package*.json ./
 # Install dependencies
 RUN npm install && npm install --save-dev terser
 
-# Copy frontend source
+# Copy frontend source and config
 COPY frontend/src ./src
-COPY frontend/public ./public
 COPY frontend/index.html ./
 COPY frontend/vite.config.ts ./
 COPY frontend/tsconfig.json ./
