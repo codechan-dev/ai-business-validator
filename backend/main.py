@@ -128,6 +128,10 @@ async def download_report(request: ValidateRequest):
         # Get validation data
         result = validate_business_idea(request.idea)
         
+        # Extract nested data from ValidateResponse structure
+        scores = result.get('scores', {})
+        analysis = result.get('analysis', {})
+        
         # Create presentation
         prs = Presentation()
         prs.slide_width = Inches(10)
@@ -188,14 +192,13 @@ async def download_report(request: ValidateRequest):
         title_p.font.bold = True
         title_p.font.color.rgb = CYAN
         
-        scores = result.get('scores', {})
         y_pos = 1.5
         for score_name, score_value in scores.items():
             # Score label and value
             score_box = slide2.shapes.add_textbox(Inches(1), Inches(y_pos), Inches(8), Inches(0.5))
             score_frame = score_box.text_frame
             score_p = score_frame.paragraphs[0]
-            score_p.text = f"{score_name}: {score_value}%"
+            score_p.text = f"{score_name.title()}: {score_value}%"
             score_p.font.size = Pt(24)
             score_p.font.bold = True
             score_p.font.color.rgb = WHITE
@@ -230,27 +233,31 @@ async def download_report(request: ValidateRequest):
         title_p.font.bold = True
         title_p.font.color.rgb = CYAN
         
-        analysis = result.get('analysis', {})
         y_pos = 1.5
-        for key, value in analysis.items():
-            if isinstance(value, str):
-                label_box = slide3.shapes.add_textbox(Inches(1), Inches(y_pos), Inches(8), Inches(0.4))
-                label_frame = label_box.text_frame
-                label_p = label_frame.paragraphs[0]
-                label_p.text = f"• {key.replace('_', ' ').title()}"
-                label_p.font.size = Pt(18)
-                label_p.font.bold = True
-                label_p.font.color.rgb = CYAN
-                
-                value_box = slide3.shapes.add_textbox(Inches(1.5), Inches(y_pos + 0.4), Inches(7.5), Inches(1.2))
-                value_frame = value_box.text_frame
-                value_frame.word_wrap = True
-                value_p = value_frame.paragraphs[0]
-                value_p.text = str(value)[:200]
-                value_p.font.size = Pt(14)
-                value_p.font.color.rgb = WHITE
-                
-                y_pos += 1.8
+        analysis_items = [
+            ("Market", analysis.get('market', 'Market analysis pending')),
+            ("Competitors", analysis.get('competitors', 'Competitor analysis pending')),
+            ("Risks", analysis.get('risks', 'Risk analysis pending'))
+        ]
+        
+        for label, value in analysis_items:
+            label_box = slide3.shapes.add_textbox(Inches(1), Inches(y_pos), Inches(8), Inches(0.4))
+            label_frame = label_box.text_frame
+            label_p = label_frame.paragraphs[0]
+            label_p.text = f"• {label}"
+            label_p.font.size = Pt(18)
+            label_p.font.bold = True
+            label_p.font.color.rgb = CYAN
+            
+            value_box = slide3.shapes.add_textbox(Inches(1.5), Inches(y_pos + 0.4), Inches(7.5), Inches(1.2))
+            value_frame = value_box.text_frame
+            value_frame.word_wrap = True
+            value_p = value_frame.paragraphs[0]
+            value_p.text = str(value)[:200]
+            value_p.font.size = Pt(14)
+            value_p.font.color.rgb = WHITE
+            
+            y_pos += 1.8
         
         # Slide 4: Recommendation
         slide4 = prs.slides.add_slide(prs.slide_layouts[6])
@@ -267,7 +274,7 @@ async def download_report(request: ValidateRequest):
         title_p.font.bold = True
         title_p.font.color.rgb = CYAN
         
-        recommendation = result.get('recommendation', 'Analysis complete. Consider market fit and competitive landscape.')
+        recommendation = analysis.get('recommendation', 'Analysis complete. Consider market fit and competitive landscape.')
         rec_box = slide4.shapes.add_textbox(Inches(1), Inches(1.5), Inches(8), Inches(5.5))
         rec_frame = rec_box.text_frame
         rec_frame.word_wrap = True
@@ -291,7 +298,7 @@ async def download_report(request: ValidateRequest):
         )
     
     except Exception as e:
-        logger.error(f"Error generating PPT: {str(e)}")
+        logger.error(f"Error generating PPT: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Failed to generate report: {str(e)}")
 
 # Serve static files from frontend build
