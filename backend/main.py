@@ -284,6 +284,28 @@ async def download_report(request: ValidateRequest):
         logger.error(f"Error generating PPT: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to generate report: {str(e)}")
 
+# Serve static files from frontend build
+from fastapi.staticfiles import StaticFiles
+import pathlib
+
+# Get the path to frontend dist folder
+frontend_dist = pathlib.Path(__file__).parent.parent / "frontend" / "dist"
+
+# Mount static files if dist folder exists
+if frontend_dist.exists():
+    app.mount("/", StaticFiles(directory=str(frontend_dist), html=True), name="static")
+else:
+    logger.warning(f"Frontend dist folder not found at {frontend_dist}. Please build frontend first.")
+
+# Catch-all route to serve index.html for SPA routing
+@app.get("/{full_path:path}")
+async def serve_spa(full_path: str):
+    """Serve single page application - fallback to index.html"""
+    index_file = frontend_dist / "index.html"
+    if index_file.exists():
+        return FileResponse(index_file)
+    return {"detail": "Not Found"}
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
