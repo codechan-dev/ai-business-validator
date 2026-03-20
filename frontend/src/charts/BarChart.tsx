@@ -37,7 +37,7 @@ export default function BarChartComponent({ scores, competitors = [] }: BarChart
   // Add your idea positioned based on feasibility and demand scores
   const yourIdeaData: CompetitorData = {
     name: 'Your Idea',
-    marketStrength: Math.round(scores.feasibility * 100),
+    marketStrength: Math.round(scores.feasibility),
     growthPotential: 35,
     size: 300,
   };

@@ -24,22 +24,22 @@ export default function ScorePieChart({ scores }: ScorePieChartProps) {
   const data = [
     {
       name: scoreLabels.feasibility,
-      value: Math.round(scores.feasibility * 100),
+      value: Math.round(scores.feasibility),
       color: COLORS.feasibility,
     },
     {
       name: scoreLabels.demand,
-      value: Math.round(scores.demand * 100),
+      value: Math.round(scores.demand),
       color: COLORS.demand,
     },
     {
       name: scoreLabels.competition,
-      value: Math.round(scores.competition * 100),
+      value: Math.round(scores.competition),
       color: COLORS.competition,
     },
     {
       name: scoreLabels.risk,
-      value: Math.round(scores.risk * 100),
+      value: Math.round(scores.risk),
       color: COLORS.risk,
     },
   ];
